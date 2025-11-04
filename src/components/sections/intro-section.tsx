@@ -34,7 +34,7 @@ const IntroSection = () => {
             />
           </span>
           <span className="relative -top-[1px] leading-none align-middle">
-            <a href="https://uwaterloo.ca/" className="hover-underline-nudge">
+            <a href="https://www.concordia.ca/" className="hover-underline-nudge">
               Concordia University
             </a>
           </span>
