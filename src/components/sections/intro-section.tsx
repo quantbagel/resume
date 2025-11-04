@@ -17,7 +17,7 @@ const IntroSection = () => {
             />
           </span>
           <span className="relative -top-[1px] leading-none align-middle">
-            Clice
+            Sonder Research Inc.
           </span>
         </span>
       </div>
