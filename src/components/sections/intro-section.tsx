@@ -22,7 +22,7 @@ const IntroSection = () => {
         </span>
       </div>
       <div>
-        ↳ CS{' '}
+        ↳ CS+FINA{' '}
         <span className="inline-flex items-center align-middle gap-1">
           <span className="inline-flex items-center align-middle relative -top-[1px]">
             <Image
