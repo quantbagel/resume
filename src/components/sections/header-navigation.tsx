@@ -4,9 +4,9 @@ const HeaderNavigation = () => {
   return (
     <div className="flex items-center justify-between">
       <h1 className="underline underline-offset-[3px] font-extralight">
-        ◆ Lance Yan
+        ◆ Lucas Miranda
       </h1>
-      <div className="flex items-center gap-2 font-extralight">
+      /*<div className="flex items-center gap-2 font-extralight">
         <Link href="/projects" className="hover-underline-nudge nav-bounce">
           Projects
         </Link>
@@ -18,7 +18,7 @@ const HeaderNavigation = () => {
         <Link href="/photography" className="hover-underline-nudge nav-bounce-delayed-2">
           Photos
         </Link>
-      </div>
+      </div>*/
     </div>
   );
 };
