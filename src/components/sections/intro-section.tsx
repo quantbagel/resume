@@ -26,7 +26,7 @@ const IntroSection = () => {
         <span className="inline-flex items-center align-middle gap-1">
           <span className="inline-flex items-center align-middle relative -top-[1px]">
             <Image
-              alt="UWaterloo"
+              alt="Concordia University"
               width={18}
               height={18}
               className="h-[18px] w-[18px] object-contain align-middle"
