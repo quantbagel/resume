@@ -56,7 +56,7 @@ const BuildingSection = () => {
                     text="Y Combinator"
                     href="https://www.ycombinator.com/"
                 />, <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7/generated_images/a16z-andreessen-horowitz-venture-capital-bdb81225-20251105065902.jpg"
+                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/a16z_logo.cb32bb22-1284665240-1762326016203.jpeg?width=8000&height=8000&resize=contain"
                     imgAlt="a16z"
                     text="a16z"
                     href="https://a16z.com/"
