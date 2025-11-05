@@ -39,7 +39,12 @@ const FooterContact = () => {
           <div className="flex items-center gap-3 flex-wrap">
             <div>◆ Contact:</div>
             <div className="flex items-center gap-3 text-neutral-700">
-              
+              <a 
+                href="https://x.com/quantbagel" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1"
+              >
                 <span className="inline-flex items-center align-middle relative -top-[1px]">
                   <Image
                     alt="X"
@@ -50,8 +55,7 @@ const FooterContact = () => {
                   />
                 </span>
                 <span className="hover-underline-nudge">Twitter</span>
-             
-                
+              </a>
             </div>
           </div>
           <button
