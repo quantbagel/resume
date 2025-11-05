@@ -4,7 +4,6 @@ const ASSETS = {
   RMC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_17.png",
   UWATERLOO: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_3.png",
   WATAI: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_10.png",
-  FOUNDERS_FUND: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_18.png",
   YC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_12.png",
   SPEEDRUN: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_13.png",
   THIEL: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_15.png",
@@ -72,27 +71,7 @@ const AchievementsSection = () => {
       </div>
 
       <div>
-        ↳ Growth at{" "}
-        <a href="https://www.symbal.ai/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
-          Symbal
-        </a>
-        , backed by Peter Thiel and{" "}
-        <span className="inline-flex items-center align-middle gap-1">
-          <span className="inline-flex items-center align-middle relative -top-[1px]">
-            <Image
-              alt="Founders Fund"
-              width={18}
-              height={18}
-              className="h-[18px] w-[18px] object-contain align-middle"
-              src={ASSETS.FOUNDERS_FUND}
-            />
-          </span>
-          <span className="relative -top-[1px] leading-none align-middle">
-            <a href="https://foundersfund.com/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
-              Founders Fund
-            </a>
-          </span>
-        </span>.
+        ↳ made EMJCapital <span className="font-bold slight-italic">$100M+</span> and sold IP to Ripple corp.
       </div>
 
       <div className="leading-[1.4]">
