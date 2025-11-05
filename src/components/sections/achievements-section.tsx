@@ -36,7 +36,10 @@ const AchievementsSection = () => {
       </div>
 
       <div>
-        ↳ Turned down <span className="font-bold slight-italic">$10M</span> valuation offers to pursue research at MILA.
+        ↳ Turned down <span className="font-bold slight-italic">$10M</span> valuation offers to pursue research at{" "}
+        <a href="https://mila.quebec/en" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
+          MILA
+        </a>.
       </div>
 
       <div>
@@ -61,7 +64,7 @@ const AchievementsSection = () => {
             />
           </span>
           <span className="relative -top-[1px] leading-none align-middle">
-            <a href="https://watai.ca/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
+            <a href="https://quarcc.com/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
               QUARCC
             </a>
           </span>
