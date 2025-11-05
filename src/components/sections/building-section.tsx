@@ -61,7 +61,7 @@ const BuildingSection = () => {
                     text="a16z"
                     href="https://a16z.com/"
                 /> and <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_15.png"
+                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_4.png"
                     imgAlt="Thiel Fellows"
                     text="Thiel Fellows"
                     href="https://thielfellowship.org/"
