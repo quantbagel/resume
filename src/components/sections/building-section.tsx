@@ -51,7 +51,7 @@ const BuildingSection = () => {
 
             <div>
                 ↳ Backed by angels from <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_14.png"
+                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_10.png"
                     imgAlt="Y Combinator"
                     text="Y Combinator"
                     href="https://www.ycombinator.com/"
