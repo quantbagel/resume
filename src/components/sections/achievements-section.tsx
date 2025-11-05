@@ -3,8 +3,8 @@ import Image from "next/image";
 const ASSETS = {
   RMC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_17.png",
   UWATERLOO: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_3.png",
-  WATAI: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_10.png",
-  YC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_12.png",
+  WATAI: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_12.png",
+  YC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_10.png",
   SPEEDRUN: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_13.png",
   THIEL: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_15.png",
 };
@@ -15,11 +15,7 @@ const AchievementsSection = () => {
       <div>◆ What makes me different:</div>
 
       <div>
-        ↳ Built{" "}
-        <a href="https://www.ratemycompany.ca/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
-          chipmunk.ai
-        </a>
-        , a pentesting agent in your terminal, got <span className="font-bold slight-italic">3K+</span> users within{" "}
+        ↳ Built chipmunk.ai, a pentesting agent in your terminal, got <span className="font-bold slight-italic">3K+</span> users within{" "}
         <span className="font-bold slight-italic">12h</span> at{" "}
         <a href="https://hackthenorth.com/" target="_blank" rel="noopener noreferrer" className="hover-underline-nudge">
           hackthenorth
