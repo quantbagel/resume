@@ -1,9 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { Mail, Github, Moon } from "lucide-react";
+import { Mail, Github, Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const FooterContact = () => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check for saved theme preference or system preference
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = savedTheme === "dark";
+    
+    setIsDark(prefersDark);
+    if (prefersDark) {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    
+    if (newIsDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   return (
     <div className="text-sm sm:text-[0.95rem] leading-tight">
       <div className="pt-4" />
@@ -28,11 +55,12 @@ const FooterContact = () => {
             </div>
           </div>
           <button
-            className="inline-flex items-center gap-1 text-sm sm:text-[0.95rem] text-neutral-700 hover-underline-nudge whitespace-nowrap"
+            onClick={toggleTheme}
+            className="inline-flex items-center gap-1 text-sm sm:text-[0.95rem] text-neutral-700 dark:text-neutral-300 hover-underline-nudge whitespace-nowrap"
             aria-label="Toggle theme"
           >
-            <Moon size={14} />
-            <span>Dark mode</span>
+            {isDark ? <Sun size={14} /> : <Moon size={14} />}
+            <span>{isDark ? "Light mode" : "Dark mode"}</span>
           </button>
         </div>
       </footer>
