@@ -38,14 +38,18 @@ const BuildingSection = () => {
             <div>◆ Building:</div>
             
             <div>
-                ↳ <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_2.png" 
-                    imgAlt="Clice" 
-                    text="Clice" 
-                   />. AI agents for the lending industry.
+                ↳ Chipmunk, an ai agent for pentesting and red-teaming agents.
             </div>
 
-            <div className="ml-4">
+            <div>
+                ↳ NERV, a BCI for learning, dream recording and sharing.
+            </div>
+
+            <div>
+                ↳ Reflex, data aggregation for humanoid robotics.
+            </div>
+
+            <div>
                 ↳ Backed by angels from <LogoText 
                     imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_14.png"
                     imgAlt="Y Combinator"
@@ -56,48 +60,12 @@ const BuildingSection = () => {
                     imgAlt="a16z"
                     text="a16z"
                     href="https://a16z.com/"
-                />, and <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_1.png"
-                    imgAlt="Soma Capital"
-                    text="Soma Capital"
-                    href="https://somacap.com/featured"
+                /> and <LogoText 
+                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_15.png"
+                    imgAlt="Thiel Fellows"
+                    text="Thiel Fellows"
+                    href="https://thielfellowship.org/"
                 />.
-            </div>
-            
-            <div className="ml-4">
-                 ↳ Backed by my own school, <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_3.png"
-                    imgAlt="UWaterloo"
-                    text="UWaterloo"
-                    href="https://uwaterloo.ca/"
-                />'s <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_8.png"
-                    imgAlt="Velocity Fund"
-                    text="Velocity Fund"
-                    href="https://velocity.fund/"
-                />.
-            </div>
-
-            <div className="ml-8">
-                 ↳ Invited to <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_8.png"
-                    imgAlt="Velocity Incubator"
-                    text="Velocity Incubator"
-                    href="https://www.velocityincubator.com/"
-                />'s Winter 2025 cohort.
-            </div>
-
-            <div>
-                ↳ <LogoText 
-                    imgSrc="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_12.png"
-                    imgAlt="ratemycompany.ca"
-                    text="ratemycompany.ca"
-                    href="https://www.ratemycompany.ca/"
-                />. Startups leaderboard coming soon. 👀
-            </div>
-
-            <div className="ml-4">
-                ↳ If you want your high-growth startup added please contact me!
             </div>
         </div>
     );
