@@ -4,7 +4,7 @@ const ASSETS = {
   RMC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_17.png",
   UWATERLOO: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_3.png",
   YC: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_10.png",
-  SPEEDRUN: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7/generated_images/speedrun-logo-minimalist-flat-design-sim-48f9ff83-20251105065901.jpg",
+  SPEEDRUN: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/SR_gradient-20385180-1762326083076.gif?width=8000&height=8000&resize=contain",
   THIEL: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_13.png",
 };
 
