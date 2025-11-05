@@ -50,7 +50,7 @@ const FooterContact = () => {
                     alt="X"
                     width={18}
                     height={18}
-                    src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_4.png"
+                    src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/38cbc1ad-46c2-44a1-9841-5d9b0339ddb7-lanceyan-tech/assets/images/images_15.png"
                     className="h-[18px] w-[18px] object-contain align-middle"
                   />
                 </span>
