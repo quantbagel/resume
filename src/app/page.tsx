@@ -7,16 +7,28 @@ import { RevenueChart } from "@/components/RevenueChart";
 
 const Diamond = () => <span className="mr-2 text-foreground">◆</span>;
 
+// Seeded random number generator (mulberry32)
+const seededRandom = (seed: number) => {
+  return () => {
+    let t = seed += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+};
+
 const GitHubContributionGraph = () => {
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   
-  // Generate highly active contribution data
+  // Generate highly active contribution data with seeded randomness
   const weeks = 53;
   const days = 7;
-  const data = Array.from({ length: weeks }, (_, weekIndex) => 
-    Array.from({ length: days }, (_, dayIndex) => {
+  const random = seededRandom(42069); // Fixed seed for consistent results
+  
+  const data = Array.from({ length: weeks }, () => 
+    Array.from({ length: days }, () => {
       // Much more active - very few empty days
-      const rand = Math.random();
+      const rand = random();
       // Only ~5% chance of no activity
       if (rand < 0.05) return 0;
       // High activity most days

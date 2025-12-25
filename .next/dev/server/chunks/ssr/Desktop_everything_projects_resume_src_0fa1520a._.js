@@ -463,6 +463,15 @@ const Diamond = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project
         lineNumber: 8,
         columnNumber: 23
     }, ("TURBOPACK compile-time value", void 0));
+// Seeded random number generator (mulberry32)
+const seededRandom = (seed)=>{
+    return ()=>{
+        let t = seed += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+};
 const GitHubContributionGraph = ()=>{
     const months = [
         "Jan",
@@ -478,16 +487,17 @@ const GitHubContributionGraph = ()=>{
         "Nov",
         "Dec"
     ];
-    // Generate highly active contribution data
+    // Generate highly active contribution data with seeded randomness
     const weeks = 53;
     const days = 7;
+    const random = seededRandom(42069); // Fixed seed for consistent results
     const data = Array.from({
         length: weeks
-    }, (_, weekIndex)=>Array.from({
+    }, ()=>Array.from({
             length: days
-        }, (_, dayIndex)=>{
+        }, ()=>{
             // Much more active - very few empty days
-            const rand = Math.random();
+            const rand = random();
             // Only ~5% chance of no activity
             if (rand < 0.05) return 0;
             // High activity most days
@@ -526,12 +536,12 @@ const GitHubContributionGraph = ()=>{
                                 children: month
                             }, month, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 48,
+                                lineNumber: 60,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 46,
+                        lineNumber: 58,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -542,17 +552,17 @@ const GitHubContributionGraph = ()=>{
                                         className: `w-[10px] h-[10px] rounded-[2px] ${getLevelColor(level)}`
                                     }, `${weekIndex}-${dayIndex}`, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 59,
+                                        lineNumber: 71,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)))
                             }, weekIndex, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 57,
+                                lineNumber: 69,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 55,
+                        lineNumber: 67,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -562,7 +572,7 @@ const GitHubContributionGraph = ()=>{
                                 children: "4,783 activities in 2024"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 70,
+                                lineNumber: 82,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -572,7 +582,7 @@ const GitHubContributionGraph = ()=>{
                                         children: "Less"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 72,
+                                        lineNumber: 84,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -587,47 +597,47 @@ const GitHubContributionGraph = ()=>{
                                                 className: `w-[10px] h-[10px] rounded-[2px] ${getLevelColor(l)}`
                                             }, l, false, {
                                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                                lineNumber: 75,
+                                                lineNumber: 87,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 73,
+                                        lineNumber: 85,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "More"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 78,
+                                        lineNumber: 90,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 71,
+                                lineNumber: 83,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 69,
+                        lineNumber: 81,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 44,
+                lineNumber: 56,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-            lineNumber: 43,
+            lineNumber: 55,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 42,
+        lineNumber: 54,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -638,14 +648,14 @@ const ListItem = ({ children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module
                 className: "tree-line-v absolute left-[7px] top-0 bottom-0 w-[1px] bg-foreground opacity-20"
             }, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 90,
+                lineNumber: 102,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute left-[7px] top-[15px] w-3 h-[1px] bg-foreground opacity-20"
             }, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 92,
+                lineNumber: 104,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -653,13 +663,13 @@ const ListItem = ({ children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module
                 children: children
             }, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 93,
+                lineNumber: 105,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 88,
+        lineNumber: 100,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SectionTitle = ({ children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -667,7 +677,7 @@ const SectionTitle = ({ children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__mo
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Diamond, {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 99,
+                lineNumber: 111,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             " ",
@@ -675,14 +685,14 @@ const SectionTitle = ({ children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__mo
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 98,
+        lineNumber: 110,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const Divider = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
         className: "my-2 border-gray-100 dark:border-gray-900"
     }, void 0, false, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 103,
+        lineNumber: 115,
         columnNumber: 23
     }, ("TURBOPACK compile-time value", void 0));
 // Custom icons for brands
@@ -691,7 +701,7 @@ const YCIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$
         children: "Y"
     }, void 0, false, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 107,
+        lineNumber: 119,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const A16zIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -699,7 +709,7 @@ const A16zIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$projec
         children: "a16z"
     }, void 0, false, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 113,
+        lineNumber: 125,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const ThielIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -708,14 +718,14 @@ const ThielIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$proje
             "thiel",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 120,
+                lineNumber: 132,
                 columnNumber: 10
             }, ("TURBOPACK compile-time value", void 0)),
             "fellowship"
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 119,
+        lineNumber: 131,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SpeedrunIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -724,7 +734,7 @@ const SpeedrunIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$pr
         className: "inline-block w-[18px] h-[18px] rounded-[2px] mr-1 align-text-bottom"
     }, void 0, false, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 125,
+        lineNumber: 137,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 function Home() {
@@ -819,7 +829,7 @@ function Home() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Diamond, {}, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 231,
+                                lineNumber: 243,
                                 columnNumber: 11
                             }, this),
                             " ",
@@ -829,13 +839,13 @@ function Home() {
                                 children: "Lucas Miranda"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 231,
+                                lineNumber: 243,
                                 columnNumber: 23
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 230,
+                        lineNumber: 242,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -852,37 +862,37 @@ function Home() {
                                         children: "Reflex"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 239,
+                                        lineNumber: 251,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 238,
+                                lineNumber: 250,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
                                 children: "CS+FINA Concordia University"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 241,
+                                lineNumber: 253,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 237,
+                        lineNumber: 249,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 229,
+                lineNumber: 241,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Divider, {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 247,
+                lineNumber: 259,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -891,7 +901,7 @@ function Home() {
                         children: "What makes me different:"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 250,
+                        lineNumber: 262,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -908,7 +918,7 @@ function Home() {
                                         children: "trysonder.ai"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 253,
+                                        lineNumber: 265,
                                         columnNumber: 19
                                     }, this),
                                     ", a pentesting agent in your terminal, got ",
@@ -917,7 +927,7 @@ function Home() {
                                         children: "3K+"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 253,
+                                        lineNumber: 265,
                                         columnNumber: 194
                                     }, this),
                                     " users within ",
@@ -926,14 +936,14 @@ function Home() {
                                         children: "12h"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 253,
+                                        lineNumber: 265,
                                         columnNumber: 253
                                     }, this),
                                     " at hackthenorth."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 252,
+                                lineNumber: 264,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -944,7 +954,7 @@ function Home() {
                                         children: "fastest"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 256,
+                                        lineNumber: 268,
                                         columnNumber: 17
                                     }, this),
                                     " in Concordia's ",
@@ -953,14 +963,14 @@ function Home() {
                                         children: "entire history"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 256,
+                                        lineNumber: 268,
                                         columnNumber: 82
                                     }, this),
                                     " to get flown out to San Francisco to raise venture."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 255,
+                                lineNumber: 267,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -971,14 +981,14 @@ function Home() {
                                         children: "$10M"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 259,
+                                        lineNumber: 271,
                                         columnNumber: 25
                                     }, this),
                                     " valuation offers to pursue research at MILA."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 258,
+                                lineNumber: 270,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -989,14 +999,14 @@ function Home() {
                                         children: "$300K"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 262,
+                                        lineNumber: 274,
                                         columnNumber: 46
                                     }, this),
                                     " founding engineer role, but decided to go all in on winning more hackathons."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 261,
+                                lineNumber: 273,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1007,7 +1017,7 @@ function Home() {
                                         children: "age 8"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 265,
+                                        lineNumber: 277,
                                         columnNumber: 31
                                     }, this),
                                     ", entrepreneur since ",
@@ -1016,21 +1026,21 @@ function Home() {
                                         children: "age 14"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 265,
+                                        lineNumber: 277,
                                         columnNumber: 99
                                     }, this),
                                     "."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 264,
+                                lineNumber: 276,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
                                 children: "Co-Founder of Canada's premier quant club, QUARCC."
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 267,
+                                lineNumber: 279,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1041,14 +1051,14 @@ function Home() {
                                         children: "$100M+"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 271,
+                                        lineNumber: 283,
                                         columnNumber: 71
                                     }, this),
                                     " and sold IP to Ripple corp."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 270,
+                                lineNumber: 282,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1059,26 +1069,26 @@ function Home() {
                                         children: "amazing"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 274,
+                                        lineNumber: 286,
                                         columnNumber: 30
                                     }, this),
                                     " people. Including founders from ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SpeedrunIcon, {}, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 274,
+                                        lineNumber: 286,
                                         columnNumber: 112
                                     }, this),
                                     " speedrun, and ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ThielIcon, {}, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 274,
+                                        lineNumber: 286,
                                         columnNumber: 143
                                     }, this),
                                     " Thiel Fellows."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 273,
+                                lineNumber: 285,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1088,31 +1098,31 @@ function Home() {
                                         children: "10x"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 277,
+                                        lineNumber: 289,
                                         columnNumber: 13
                                     }, this),
                                     " hackathon winner"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 276,
+                                lineNumber: 288,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 251,
+                        lineNumber: 263,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 249,
+                lineNumber: 261,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(GitHubContributionGraph, {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 282,
+                lineNumber: 294,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1121,7 +1131,7 @@ function Home() {
                         children: "Building:"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 285,
+                        lineNumber: 297,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1137,21 +1147,21 @@ function Home() {
                                         children: "Sonder"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 288,
+                                        lineNumber: 300,
                                         columnNumber: 13
                                     }, this),
                                     ", an ai agent for pentesting and red-teaming agents."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 287,
+                                lineNumber: 299,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
                                 children: "NERV, a BCI for learning, dream recording and sharing."
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 290,
+                                lineNumber: 302,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1164,14 +1174,14 @@ function Home() {
                                         children: "Reflex"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 294,
+                                        lineNumber: 306,
                                         columnNumber: 13
                                     }, this),
                                     ", data aggregation for humanoid robotics."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 293,
+                                lineNumber: 305,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
@@ -1179,48 +1189,48 @@ function Home() {
                                     "Backed by angels from ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(YCIcon, {}, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 309,
                                         columnNumber: 35
                                     }, this),
                                     " Y Combinator, ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(A16zIcon, {}, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 309,
                                         columnNumber: 60
                                     }, this),
                                     " a16z and ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ThielIcon, {}, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 309,
                                         columnNumber: 82
                                     }, this),
                                     " Thiel Fellows."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 296,
+                                lineNumber: 308,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 286,
+                        lineNumber: 298,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 284,
+                lineNumber: 296,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$src$2f$components$2f$RevenueChart$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["RevenueChart"], {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 302,
+                lineNumber: 314,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Divider, {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 304,
+                lineNumber: 316,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1229,7 +1239,7 @@ function Home() {
                         children: "Please reach out if you're"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 307,
+                        lineNumber: 319,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1239,31 +1249,31 @@ function Home() {
                                 children: "A fellow founder."
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 309,
+                                lineNumber: 321,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ListItem, {
                                 children: "Someone who is curious about me or what I'm doing."
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 310,
+                                lineNumber: 322,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 308,
+                        lineNumber: 320,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 306,
+                lineNumber: 318,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Divider, {}, void 0, false, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 314,
+                lineNumber: 326,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -1274,7 +1284,7 @@ function Home() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Diamond, {}, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 318,
+                                lineNumber: 330,
                                 columnNumber: 11
                             }, this),
                             " ",
@@ -1283,7 +1293,7 @@ function Home() {
                                 children: "Contact:"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 318,
+                                lineNumber: 330,
                                 columnNumber: 23
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1299,31 +1309,31 @@ function Home() {
                                             strokeWidth: 3
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                            lineNumber: 321,
+                                            lineNumber: 333,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 320,
+                                        lineNumber: 332,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Twitter"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                        lineNumber: 323,
+                                        lineNumber: 335,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 319,
+                                lineNumber: 331,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 317,
+                        lineNumber: 329,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1335,39 +1345,39 @@ function Home() {
                                 className: "mr-2"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 331,
+                                lineNumber: 343,
                                 columnNumber: 31
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$lucide$2d$react$40$0$2e$562$2e$0_react$40$19$2e$2$2e$3$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$moon$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Moon$3e$__["Moon"], {
                                 size: 14,
                                 className: "mr-2"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 331,
+                                lineNumber: 343,
                                 columnNumber: 68
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$everything$2f$projects$2f$resume$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$1$2e$1_$40$babel$2b$core$40$7$2e$28$2e$5_react$2d$dom$40$19$2e$2$2e$3_react$40$19$2e$2$2e$3_$5f$react$40$19$2e$2$2e$3$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 children: "Dark mode"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                                lineNumber: 332,
+                                lineNumber: 344,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                        lineNumber: 327,
+                        lineNumber: 339,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-                lineNumber: 316,
+                lineNumber: 328,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/everything/projects/resume/src/app/page.tsx",
-        lineNumber: 228,
+        lineNumber: 240,
         columnNumber: 5
     }, this);
 }
