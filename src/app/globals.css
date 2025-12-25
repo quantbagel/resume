@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* Tree structure: first item vertical line starts at the horizontal branch level */
+.tree-item:first-child .tree-line-v {
+  top: 15px;
+}
+
+/* Tree structure: last item vertical line only goes to the horizontal branch */
+.tree-item:last-child .tree-line-v {
+  bottom: auto;
+  height: 15px;
+}
+
+/* If there's only one item, hide the vertical line completely */
+.tree-item:only-child .tree-line-v {
+  display: none;
+}
+
