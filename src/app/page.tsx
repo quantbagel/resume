@@ -262,13 +262,13 @@ export default function Home() {
         <SectionTitle>What makes me different:</SectionTitle>
         <div className="">
           <ListItem>
-            Built <a href="https://www.trysonder.ai" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">trysonder.ai</a>, a pentesting agent in your terminal, got <span className="italic font-bold">3K+</span> users within <span className="italic font-bold">12h</span> at hackthenorth.
+            Built <a href="https://www.trysonder.ai" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">trysonder.ai</a>, a pentesting agent in your terminal, got <span className="italic font-bold">3K+</span> downloads within <span className="italic font-bold">12h</span> at hackthenorth.
           </ListItem>
           <ListItem>
             The <span className="italic font-bold">fastest</span> in Concordia's <span className="italic font-bold">entire history</span> to get flown out to San Francisco to raise venture.
           </ListItem>
           <ListItem>
-            Turned down <span className="italic font-bold">$10M</span> valuation offers to pursue research at MILA.
+            Turned down <span className="italic font-bold">$10M</span> valuation offers to pursue research with MILA.
           </ListItem>
           <ListItem>
             Received full-time interest for: <span className="italic font-bold">$300K</span> founding engineer role, but decided to go all in on winning more hackathons.
@@ -280,7 +280,7 @@ export default function Home() {
             Co-Founder of Canada's premier quant club, QUARCC.
           </ListItem>
           <ListItem>
-            made EMJCapital (now trading under SRXH, soon to be EMJX) <span className="italic font-bold">$100M+</span> and sold IP to Ripple corp.
+            made EMJCapital (now trading under SRXH, soon to be EMJX) <span className="italic font-bold">$20M+</span> and sold IP to Ripple corp.
           </ListItem>
           <ListItem>
             Mentored by some <span className="italic font-bold">amazing</span> people. Including founders from <SpeedrunIcon /> speedrun, and <ThielIcon /> Thiel Fellows.
@@ -306,7 +306,7 @@ export default function Home() {
             <a href="https://www.tryreflex.ai" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Reflex</a>, data aggregation for humanoid robotics.
           </ListItem>
           <ListItem>
-            Backed by angels from <YCIcon /> Y Combinator, <A16zIcon /> a16z and <ThielIcon /> Thiel Fellows.
+            Mentored by angels from <YCIcon /> Y Combinator, <A16zIcon /> a16z and <ThielIcon /> Thiel Fellows.
           </ListItem>
         </div>
       </section>
