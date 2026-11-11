@@ -1,30 +1,16 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lucas Miranda",
-  description: "Personal website of Lucas Miranda",
+  metadataBase: new URL("https://www.quantbagel.xyz"),
+  title: "Lucas Miranda — quantbagel",
+  description: "Building Abstract — AI and robotics.",
+  alternates: { canonical: "/" },
+  openGraph: { title: "Lucas Miranda — quantbagel", description: "Building Abstract — AI and robotics.", url: "https://www.quantbagel.xyz", type: "website" },
+  twitter: { card: "summary", creator: "@quantbagel" },
+  icons: { icon: "/icon.svg" },
 };
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <div className="max-w-2xl mx-auto px-6 py-12 min-h-screen">
-            {children}
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+export const viewport: Viewport = { themeColor: "#000000", width: "device-width", initialScale: 1 };
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>{children}</body></html>;
 }
-
