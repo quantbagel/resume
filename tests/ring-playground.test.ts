@@ -6,7 +6,7 @@ let instance: Playground | undefined;
 let cleanup = () => {};
 afterEach(() => { instance?.destroy(); instance = undefined; cleanup(); });
 
-function setup(reducedMotion = false) {
+function setup(reducedMotion = false, prepare?: (globals: (name: string, value: unknown) => void) => void) {
   const saved = new Map<string, PropertyDescriptor | undefined>();
   const globals = (name: string, value: unknown) => {
     saved.set(name, Object.getOwnPropertyDescriptor(globalThis, name));
@@ -14,16 +14,20 @@ function setup(reducedMotion = false) {
   };
   let now = 1000, nextFrame: FrameRequestCallback | undefined;
   let frames = 0, invalidDraws = 0, colorChanges = 0;
-  let glyphs: number[][] = [];
+  let glyphs: number[][] = [], transform: number[] = [];
+  const atlasDraws: string[] = [];
   const colors = new Map();
   const media = Object.assign(new EventTarget(), { matches: reducedMotion });
   const opened: string[] = [];
   const win = Object.assign(new EventTarget(), { open: (href: string) => { opened.push(href); } });
+  // Each glyph is a sprite copied out of the atlas, placed by the transform set just before it.
   const context = new Proxy({}, { get: (_target, key) => key === "measureText" ? () => ({ width: 12 }) : (...args: unknown[]) => {
     if (args.some(value => typeof value === "number" && !Number.isFinite(value))) invalidDraws++;
     if (key === "clearRect") glyphs = [];
-    if (key === "translate") glyphs.push(args as number[]);
+    if (key === "setTransform") transform = args as number[];
+    if (key === "drawImage") glyphs.push([transform[4] / 2, transform[5] / 2]);
   } });
+  const atlasContext = new Proxy({}, { get: (_target, key) => (...args: unknown[]) => { if (key === "fillText") atlasDraws.push(args[0] as string); } });
   const canvas = Object.assign(new EventTarget(), {
     clientWidth: 1280, clientHeight: 800, width: 0, height: 0, style: { cursor: "default" },
     getContext: () => context, focus: () => {}, setPointerCapture: () => {},
@@ -32,12 +36,13 @@ function setup(reducedMotion = false) {
   globals("window", win);
   globals("document", { hidden: false, documentElement: { style: {
     setProperty: (key: string, value: string) => { colors.set(key, value); if (key === "--page-bg") colorChanges++; }, removeProperty: (key: string) => colors.delete(key),
-  } }, querySelector: () => null });
+  } }, querySelector: () => null, createElement: () => ({ width: 0, height: 0, getContext: () => atlasContext }) });
   globals("matchMedia", () => media);
   globals("devicePixelRatio", 2);
   globals("performance", { now: () => now });
   globals("requestAnimationFrame", (callback: FrameRequestCallback) => { nextFrame = callback; return ++frames; });
   globals("cancelAnimationFrame", () => { nextFrame = undefined; });
+  prepare?.(globals);
   instance = createPlayground(canvas as unknown as HTMLCanvasElement);
   cleanup = () => { for (const [key, descriptor] of Array.from(saved)) {
     if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
@@ -69,7 +74,7 @@ function setup(reducedMotion = false) {
     return { bounces, colorChanges: colorChanges - before };
   };
   const tap = (index: number) => { const [x, y] = glyphs[index]; pointer("pointerdown", x, y); pointer("pointerup", x, y); send("click", {}); };
-  return { canvas, win, colors, opened, globals, advance, pointer, key, watch, tap, glyph: (index: number) => glyphs[index], get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
+  return { canvas, win, colors, opened, atlasDraws, advance, pointer, key, watch, tap, glyph: (index: number) => glyphs[index], get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
 }
 
 test("a double tap no longer starts anything", () => {
@@ -151,18 +156,45 @@ test("dragging from a linked word moves the ring instead of opening the link", (
 });
 
 test("sound is on from the start but stays silent until the browser allows audio", () => {
-  const env = setup();
   let notes = 0, state = "suspended";
   const node = { connect() {}, disconnect() {}, start() {}, stop() {}, frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} } };
-  env.globals("AudioContext", class {
+  const env = setup(false, globals => globals("AudioContext", class {
     currentTime = 0; destination = {};
     get state() { return state; }
     resume() { return Promise.resolve(); } close() { return Promise.resolve(); }
     createOscillator() { notes++; return { ...node, type: "" }; } createGain() { return node; }
-  });
+  }));
   env.advance(1.2);
   assert.equal(notes, 0);
   state = "running";
   env.advance(2);
   assert.ok(notes >= 1);
+});
+
+test("glyphs are rasterised once into the atlas, then again only when their color or size changes", () => {
+  const env = setup();
+  // One sprite for each distinct character, and one more, underlined, for each distinct character in a link.
+  const linked = (index: number) => index >= COPY.indexOf("abstract") && index < COPY.indexOf("abstract") + 8 || index === COPY.length - 2;
+  const distinct = new Set(Array.from(COPY).flatMap((char, index) => linked(index) ? [char, char + " underlined"] : [char]));
+  assert.equal(env.atlasDraws.length, distinct.size);
+  env.advance(.5); // still falling: every frame turns the ring, and none of them rasterises text
+  assert.equal(env.atlasDraws.length, distinct.size);
+  env.key("c"); env.advance(.05); // blue keeps white text
+  assert.equal(env.atlasDraws.length, distinct.size);
+  env.key("c"); env.key("c"); env.advance(.05); // lime needs dark text
+  assert.equal(env.atlasDraws.length, distinct.size * 2);
+});
+
+test("letters pressed hard against an edge scatter, fall, and fly back into a ring", () => {
+  const env = setup();
+  const spread = () => { const xs = Array.from(COPY, (_char, index) => env.glyph(index)[0]); return Math.max(...xs) - Math.min(...xs); };
+  const ringWidth = spread();
+  const [x, y] = env.glyph(0);
+  env.pointer("pointerdown", x, y); env.pointer("pointermove", x, y + 900); // pressed hard into the floor
+  env.advance(2.5);
+  assert.ok(spread() > ringWidth * 1.5); // the letters have flown apart
+  env.pointer("pointerup", x, y + 900);
+  env.advance(4.5);
+  assert.ok(Math.abs(spread() - ringWidth) < 30); // a ring again
+  assert.equal(env.invalidDraws, 0);
 });
