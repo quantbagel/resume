@@ -5,6 +5,12 @@ const COLORS = [
   ["#d7ff00", "#111111"], ["#7c3aed", "#ffffff"], ["#00d9ff", "#001018"],
   ["#ff6a00", "#ffffff"], ["#ff4fa3", "#19000c"],
 ];
+// Words in the ring that open a page when tapped. Each is matched at its last appearance in COPY.
+const LINKS = [["abstract", "https://abstract.inc/inference"], ["x", "https://x.com/quantbagel"]].map(([word, href]) => {
+  const from = Array.from(COPY.slice(0, COPY.lastIndexOf(word))).length;
+  return { from, to: from + Array.from(word).length, href };
+});
+const linkOf = (index: number) => LINKS.find(link => index >= link.from && index < link.to);
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 // The slowest wall impact, in px/s, that counts as a bump. Anything slower is the ring settling.
 const BUMP = 40;
@@ -30,13 +36,13 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let paused = reduceMotion.matches, obscured = false, destroyed = false;
   let width = 0, height = 0, ratio = 1, baseRadius = 180;
-  let theme = 0, sound = false, audio: AudioContext | undefined;
+  let theme = 0, sound = true, audio: AudioContext | undefined;
   let lastSound = 0, lastTime = 0, frameId = 0;
   let ball: Ball = { x: 0, y: 0, vx: 0, vy: 0, r: 180, angle: Math.PI, sx: 1, sy: 1 };
   let puck: Ball | null = null;
   let game: { score: number; remaining: number; seconds: number; ended: boolean } | null = null;
   let drag: { id: number; dx: number; dy: number; startX: number; startY: number; lastX: number; lastY: number; time: number; started: number; moved: boolean; pressure: number } | null = null;
-  let lastTap = { time: 0, x: 0, y: 0 };
+  let lastTap = { time: 0, x: 0, y: 0 }, tappedLink: string | null = null;
   let pinch: { distance: number; radius: number } | null = null;
   const pointers = new Map<number, { x: number; y: number }>();
   let particles: Particle[] = [], burstTime = 0, returning = false;
@@ -52,12 +58,20 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     document.documentElement.style.setProperty("--page-fg", COLORS[theme][1]);
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", COLORS[theme][0]);
   }
+  // Browsers keep audio suspended until the visitor's first gesture. Until then there is no
+  // speaker: notes scheduled on a suspended context would all sound at once when it resumes.
+  function speaker() {
+    audio ??= new AudioContext();
+    if (audio.state === "running") return audio;
+    void audio.resume().catch(() => {});
+    return null;
+  }
   function tone(force: number, frequency = 160) {
     if (!sound || performance.now() - lastSound < 35) return;
-    lastSound = performance.now();
     try {
-      audio ??= new AudioContext();
-      if (audio.state === "suspended") void audio.resume().catch(() => {});
+      const audio = speaker();
+      if (!audio) return;
+      lastSound = performance.now();
       const oscillator = audio.createOscillator(), gain = audio.createGain();
       oscillator.type = "sine";
       oscillator.frequency.setValueAtTime(frequency, audio.currentTime);
@@ -105,26 +119,42 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     contain(ball); contain(puck);
     callbacks.onGameChange({ score: 0, seconds: 15 });
   }
-  function forGlyphs(body: Ball, visit: (char: string, x: number, y: number, angle: number, scale: number) => void) {
+  function forGlyphs(body: Ball, visit: (char: string, x: number, y: number, angle: number, scale: number, index: number) => void) {
     const fontScale = fontSize(body) / 26;
     const gap = 19.5 * fontScale;
     const scale = (TAU * body.r - gap) / textWidth;
     let angle = body.angle + gap / body.r / 2;
-    for (const glyph of glyphs) {
+    glyphs.forEach((glyph, index) => {
       const arc = glyph.width * scale / body.r;
       const mid = angle + arc / 2;
       visit(glyph.char, body.x + Math.cos(mid) * body.r * body.sx, body.y + Math.sin(mid) * body.r * body.sy,
-        Math.atan2(Math.cos(mid) * body.sy, -Math.sin(mid) * body.sx), scale / fontScale);
+        Math.atan2(Math.cos(mid) * body.sy, -Math.sin(mid) * body.sx), scale / fontScale, index);
       angle += arc;
-    }
+    });
   }
   function drawRing(body: Ball) {
     ctx.font = `400 ${fontSize(body)}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
     ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-    forGlyphs(body, (char, x, y, angle, scale) => {
+    // Only the big ring carries links; the paddle and puck are too small and busy to tap.
+    const linked = body === ball && !game, fontScale = fontSize(body) / 26;
+    forGlyphs(body, (char, x, y, angle, scale, index) => {
       ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, 1);
-      ctx.fillText(char, 0, 0); ctx.restore();
+      ctx.fillText(char, 0, 0);
+      if (linked && linkOf(index)) {
+        const span = glyphs[index].width * fontScale + 1;
+        ctx.fillRect(-span / 2, 4 * fontScale, span, Math.max(1, 1.5 * fontScale));
+      }
+      ctx.restore();
     });
+  }
+  function linkAt(x: number, y: number) {
+    if (game || particles.length) return null;
+    let nearest = Math.max(22, fontSize(ball)), found: string | null = null;
+    forGlyphs(ball, (_char, glyphX, glyphY, _angle, _scale, index) => {
+      const link = linkOf(index), distance = Math.hypot(glyphX - x, glyphY - y);
+      if (link && distance < nearest) { nearest = distance; found = link.href; }
+    });
+    return found as string | null;
   }
   function burst() {
     if (game || particles.length) return;
@@ -253,6 +283,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     draw(); frameId = requestAnimationFrame(frame);
   }
   function down(event: PointerEvent) {
+    tappedLink = null;
     if (event.button !== 0 || obscured || game?.ended) return;
     if (particles.length) { restore(); return; }
     if (Math.hypot(event.clientX - ball.x, event.clientY - ball.y) > extent(ball) + 12) return;
@@ -275,7 +306,9 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
       contain(ball); if (drag) drag.moved = true; return;
     }
     if (!drag || drag.id !== event.pointerId) {
-      canvas.style.cursor = Math.hypot(event.clientX - ball.x, event.clientY - ball.y) <= extent(ball) ? "grab" : "default"; return;
+      canvas.style.cursor = linkAt(event.clientX, event.clientY) ? "pointer"
+        : Math.hypot(event.clientX - ball.x, event.clientY - ball.y) <= extent(ball) ? "grab" : "default";
+      return;
     }
     const now = performance.now(), dt = Math.max(.008, (now - drag.time) / 1000);
     ball.vx = clamp((event.clientX - drag.lastX) / dt, -2200, 2200);
@@ -305,6 +338,9 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     const tap = !drag.moved && now - drag.started < 270 && event.type !== "pointercancel";
     if (now - drag.time > 90 || paused || event.type === "pointercancel") ball.vx = ball.vy = 0;
     drag = null; burstTime = 0; canvas.style.cursor = "grab";
+    // A tap on a linked word opens it from the click that follows, which every browser accepts as
+    // a gesture that may open a tab.
+    if (tap && (tappedLink = linkAt(event.clientX, event.clientY))) { lastTap.time = 0; return; }
     if (tap) {
       if (now - lastTap.time < 330 && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 35) {
         lastTap.time = 0; if (game) reset(); else startGame();
@@ -318,7 +354,14 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
   canvas.addEventListener("lostpointercapture", (event) => {
     pointers.delete(event.pointerId); if (drag?.id === event.pointerId) drag = null;
   }, options);
+  canvas.addEventListener("click", () => {
+    const href = tappedLink; tappedLink = null;
+    if (href) window.open(href, "_blank", "noopener,noreferrer");
+  }, options);
   canvas.addEventListener("dblclick", event => event.preventDefault(), options);
+  // Sound is on from the start, so the first gesture anywhere on the page wakes the speaker.
+  for (const gesture of ["pointerdown", "pointerup", "keydown", "click"])
+    window.addEventListener(gesture, () => { if (sound) speaker(); }, { signal: abort.signal, capture: true });
   canvas.addEventListener("keydown", event => {
     if (obscured || game?.ended) return;
     const key = event.key.toLowerCase();

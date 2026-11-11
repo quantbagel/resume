@@ -17,7 +17,8 @@ function setup(reducedMotion = false) {
   let glyphs: number[][] = [];
   const colors = new Map();
   const media = Object.assign(new EventTarget(), { matches: reducedMotion });
-  const win = new EventTarget();
+  const opened: string[] = [];
+  const win = Object.assign(new EventTarget(), { open: (href: string) => { opened.push(href); } });
   const context = new Proxy({}, { get: (_target, key) => key === "measureText" ? () => ({ width: 12 }) : (...args: unknown[]) => {
     if (args.some(value => typeof value === "number" && !Number.isFinite(value))) invalidDraws++;
     if (key === "clearRect") glyphs = [];
@@ -70,7 +71,8 @@ function setup(reducedMotion = false) {
     }
     return { bounces, colorChanges: colorChanges - before };
   };
-  return { canvas, win, games, rounds, pauses, colors, advance, pointer, key, watch, get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
+  const tap = (index: number) => { const [x, y] = glyphs[index]; pointer("pointerdown", x, y); pointer("pointerup", x, y); send("click", {}); };
+  return { canvas, win, games, rounds, pauses, colors, opened, globals, advance, pointer, key, watch, tap, glyph: (index: number) => glyphs[index], get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
 }
 
 test("a double tap starts a 15-second round, produces one result, and resets", () => {
@@ -177,4 +179,42 @@ test("a swipe that carries the paddle past the puck in one move still strikes it
   env.pointer("pointerup", 640, 120);
   env.advance(1);
   assert.ok(env.games.at(-1)!.score >= 1);
+});
+
+const COPY = "lucas miranda is building abstract — ai and robotics. on the internet as quantbagel. say hello on x.";
+
+test("tapping abstract or x in the ring opens its link, and other letters do not", () => {
+  const env = setup(true);
+  env.tap(COPY.indexOf("abstract") + 3);
+  env.tap(COPY.length - 2);
+  assert.deepEqual(env.opened, ["https://abstract.inc/inference", "https://x.com/quantbagel"]);
+  env.tap(COPY.indexOf("miranda"));
+  env.tap(COPY.indexOf("quantbagel") + 4);
+  assert.equal(env.opened.length, 2);
+  assert.equal(env.games.length, 0);
+});
+
+test("dragging from a linked word moves the ring instead of opening the link", () => {
+  const env = setup(true);
+  const [x, y] = env.glyph(COPY.indexOf("abstract"));
+  env.pointer("pointerdown", x, y); env.pointer("pointermove", x + 60, y); env.pointer("pointerup", x + 60, y);
+  env.canvas.dispatchEvent(new Event("click"));
+  assert.deepEqual(env.opened, []);
+});
+
+test("sound is on from the start but stays silent until the browser allows audio", () => {
+  const env = setup();
+  let notes = 0, state = "suspended";
+  const node = { connect() {}, disconnect() {}, start() {}, stop() {}, frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} } };
+  env.globals("AudioContext", class {
+    currentTime = 0; destination = {};
+    get state() { return state; }
+    resume() { return Promise.resolve(); } close() { return Promise.resolve(); }
+    createOscillator() { notes++; return { ...node, type: "" }; } createGain() { return node; }
+  });
+  env.advance(1.2);
+  assert.equal(notes, 0);
+  state = "running";
+  env.advance(2);
+  assert.ok(notes >= 1);
 });
