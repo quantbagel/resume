@@ -4,9 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.quantbagel.xyz"),
   title: "Lucas Miranda — quantbagel",
-  description: "Building Abstract — AI and robotics.",
+  description: "Building Abstract — compute and physical AI.",
   alternates: { canonical: "/" },
-  openGraph: { title: "Lucas Miranda — quantbagel", description: "Building Abstract — AI and robotics.", url: "https://www.quantbagel.xyz", type: "website" },
+  openGraph: { title: "Lucas Miranda — quantbagel", description: "Building Abstract — compute and physical AI.", url: "https://www.quantbagel.xyz", type: "website" },
   twitter: { card: "summary", creator: "@quantbagel" },
   icons: { icon: "/icon.svg" },
 };
