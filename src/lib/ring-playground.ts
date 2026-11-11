@@ -200,12 +200,12 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
       hit = Math.max(hit, speed); body.sx = sx; body.sy = sy;
       return speed * restitution;
     };
-    if (body.x < edge) { body.x = edge; if (body.vx < 0) body.vx = rebound(-body.vx, .92, .82, 1.12); }
-    if (body.x > width - edge) { body.x = width - edge; if (body.vx > 0) body.vx = -rebound(body.vx, .92, .82, 1.12); }
-    if (body.y < edge) { body.y = edge; if (body.vy < 0) body.vy = rebound(-body.vy, .92, 1.12, .8); }
+    if (body.x < edge) { body.x = edge; if (body.vx < 0) body.vx = rebound(-body.vx, .85, .82, 1.12); }
+    if (body.x > width - edge) { body.x = width - edge; if (body.vx > 0) body.vx = -rebound(body.vx, .85, .82, 1.12); }
+    if (body.y < edge) { body.y = edge; if (body.vy < 0) body.vy = rebound(-body.vy, .85, 1.12, .8); }
     if (body.y > height - edge) {
       body.y = height - edge;
-      if (body.vy > 0) body.vy = -rebound(body.vy, .87, 1.12, .8);
+      if (body.vy > 0) body.vy = -rebound(body.vy, .8, 1.12, .8);
       body.vx *= Math.pow(.97, dt * 60);
     }
     if (hit) { tone(hit); setTheme(theme + 1); }
@@ -229,7 +229,7 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
       if (returning && burstTime > .9) particles = [];
       return;
     }
-    ball.angle += dt * TAU / 60;
+    ball.angle += dt * TAU / 40; // one turn every 40 seconds
     ball.sx += (1 - ball.sx) * Math.min(1, dt * 12); ball.sy += (1 - ball.sy) * Math.min(1, dt * 12);
     if (drag) {
       if (drag.pressure > ball.r * .42) { burstTime += dt; if (burstTime > .9) burst(); }
