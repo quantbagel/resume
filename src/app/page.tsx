@@ -50,9 +50,9 @@ export default function Home() {
   return (
     <main className="playground" data-mode={game ? "game" : "ring"}>
       <h1 className="sr-only">Lucas Miranda — quantbagel</h1>
-      <p className="sr-only">Building Abstract — AI and robotics.</p>
+      <p className="sr-only">Building Abstract — compute and physical AI.</p>
       <p id="instructions" className="sr-only">Drag and throw the ring. Arrow keys move it. C changes colors, P pauses, R resets, and Enter starts air hockey. Double tap to play. Push and hold against an edge to scatter the letters. In the ring, the words Abstract and X are links.</p>
-      <canvas ref={canvas} className="ring-canvas" tabIndex={0} aria-label="Interactive ring: Lucas Miranda is building Abstract — AI and robotics" aria-describedby="instructions" />
+      <canvas ref={canvas} className="ring-canvas" tabIndex={0} aria-label="Interactive ring: Lucas Miranda is building Abstract — compute and physical AI" aria-describedby="instructions" />
       <p className="gesture-hint" aria-hidden="true">drag, throw, double tap</p>
       {game && <div className="game-hud" aria-label="Air hockey score">
         <span aria-label={`${game.seconds} seconds remaining`}>:{String(game.seconds).padStart(2, "0")}</span>
@@ -67,7 +67,7 @@ export default function Home() {
         <div className="dialog-content">
           <p className="eyebrow">@quantbagel</p>
           <h2>Lucas Miranda</h2>
-          <p className="bio">Building Abstract —<br />AI and robotics.</p>
+          <p className="bio">Building Abstract —<br />compute and physical AI.</p>
           <nav className="profile-links" aria-label="Find Lucas">
             <a href="https://abstract.inc" target="_blank" rel="noreferrer">Abstract ↗</a>
             <a href="https://x.com/quantbagel" target="_blank" rel="noreferrer">X ↗</a>

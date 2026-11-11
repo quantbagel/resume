@@ -181,7 +181,7 @@ test("a swipe that carries the paddle past the puck in one move still strikes it
   assert.ok(env.games.at(-1)!.score >= 1);
 });
 
-const COPY = "lucas miranda is building abstract — ai and robotics. on the internet as quantbagel. say hello on x.";
+const COPY = "lucas miranda is building abstract — compute and physical ai. on the internet as quantbagel. say hello on x.";
 
 test("tapping abstract or x in the ring opens its link, and other letters do not", () => {
   const env = setup(true);

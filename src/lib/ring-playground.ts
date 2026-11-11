@@ -1,5 +1,5 @@
 const TAU = Math.PI * 2;
-const COPY = "lucas miranda is building abstract — ai and robotics. on the internet as quantbagel. say hello on x.";
+const COPY = "lucas miranda is building abstract — compute and physical ai. on the internet as quantbagel. say hello on x.";
 const COLORS = [
   ["#000000", "#ffffff"], ["#163cff", "#ffffff"], ["#ff3b30", "#ffffff"],
   ["#d7ff00", "#111111"], ["#7c3aed", "#ffffff"], ["#00d9ff", "#001018"],
