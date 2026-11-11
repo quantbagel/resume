@@ -6,6 +6,8 @@ const COLORS = [
   ["#ff6a00", "#ffffff"], ["#ff4fa3", "#19000c"],
 ];
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
+// The slowest wall impact, in px/s, that counts as a bump. Anything slower is the ring settling.
+const BUMP = 40;
 type Ball = { x: number; y: number; vx: number; vy: number; r: number; angle: number; sx: number; sy: number };
 type Particle = { char: string; x: number; y: number; vx: number; vy: number; angle: number; spin: number; targetX: number; targetY: number; targetAngle: number };
 type Callbacks = {
@@ -28,7 +30,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let paused = reduceMotion.matches, obscured = false, destroyed = false;
   let width = 0, height = 0, ratio = 1, baseRadius = 180;
-  let theme = 0, bounces = 0, sound = false, audio: AudioContext | undefined;
+  let theme = 0, sound = false, audio: AudioContext | undefined;
   let lastSound = 0, lastTime = 0, frameId = 0;
   let ball: Ball = { x: 0, y: 0, vx: 0, vy: 0, r: 180, angle: Math.PI, sx: 1, sy: 1 };
   let puck: Ball | null = null;
@@ -51,7 +53,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", COLORS[theme][0]);
   }
   function tone(force: number, frequency = 160) {
-    if (!sound || performance.now() - lastSound < 70) return;
+    if (!sound || performance.now() - lastSound < 35) return;
     lastSound = performance.now();
     try {
       audio ??= new AudioContext();
@@ -60,7 +62,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
       oscillator.type = "sine";
       oscillator.frequency.setValueAtTime(frequency, audio.currentTime);
       oscillator.frequency.exponentialRampToValueAtTime(45, audio.currentTime + .12);
-      gain.gain.setValueAtTime(Math.min(.16, force / 8000), audio.currentTime);
+      gain.gain.setValueAtTime(Math.min(.16, .04 + force / 8000), audio.currentTime);
       gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .14);
       oscillator.connect(gain); gain.connect(audio.destination);
       oscillator.start(); oscillator.stop(audio.currentTime + .15);
@@ -92,7 +94,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
   function reset() {
     game = null; puck = null; particles = []; drag = null; pinch = null; pointers.clear();
     ball = { x: width / 2, y: height / 2, vx: 0, vy: 0, r: baseRadius, angle: Math.PI, sx: 1, sy: 1 };
-    bounces = 0; setTheme(0); setPaused(reduceMotion.matches); callbacks.onGameChange(null);
+    setTheme(0); setPaused(reduceMotion.matches); callbacks.onGameChange(null);
     canvas.style.cursor = "default";
   }
   function startGame() {
@@ -153,17 +155,25 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
       callbacks.onGameChange({ score: game.score, seconds: game.seconds });
       return;
     }
+    // A bump is any impact into a wall at BUMP speed or more. Each one squashes the ring, sounds,
+    // and turns the page color. A slower touch settles against the wall instead of rebounding, so
+    // outside the game nothing bounces without registering. In the game only the floor settles,
+    // which keeps a slow puck from sticking to the rails.
     let hit = 0;
-    if (body.x < edge) { hit = Math.abs(body.vx); body.x = edge; body.vx = Math.abs(body.vx) * .92; body.sx = .82; body.sy = 1.12; }
-    if (body.x > width - edge) { hit = Math.abs(body.vx); body.x = width - edge; body.vx = -Math.abs(body.vx) * .92; body.sx = .82; body.sy = 1.12; }
-    if (body.y < edge && !inGoal) { hit = Math.abs(body.vy); body.y = edge; body.vy = Math.abs(body.vy) * .92; body.sy = .8; body.sx = 1.12; }
+    const rebound = (speed: number, restitution: number, sx: number, sy: number, settles = !game) => {
+      if (speed < BUMP) return settles ? 0 : speed * restitution;
+      hit = Math.max(hit, speed); body.sx = sx; body.sy = sy;
+      return speed * restitution;
+    };
+    if (body.x < edge) { body.x = edge; if (body.vx < 0) body.vx = rebound(-body.vx, .92, .82, 1.12); }
+    if (body.x > width - edge) { body.x = width - edge; if (body.vx > 0) body.vx = -rebound(body.vx, .92, .82, 1.12); }
+    if (body.y < edge && !inGoal) { body.y = edge; if (body.vy < 0) body.vy = rebound(-body.vy, .92, 1.12, .8); }
     if (body.y > height - edge) {
-      hit = Math.abs(body.vy); body.y = height - edge;
-      body.vy = Math.abs(body.vy) < 35 ? 0 : -Math.abs(body.vy) * .87;
-      if (hit > 35) { body.sy = .8; body.sx = 1.12; }
+      body.y = height - edge;
+      if (body.vy > 0) body.vy = -rebound(body.vy, .87, 1.12, .8, true);
       body.vx *= Math.pow(.97, dt * 60);
     }
-    if (hit > 80) { tone(hit); if (!game && ++bounces % 3 === 0) setTheme(theme + 1); }
+    if (hit) { tone(hit); if (!game) setTheme(theme + 1); }
     body.vx *= Math.pow(game ? .992 : .998, dt * 60);
     if (game) body.vy *= Math.pow(.992, dt * 60);
   }
@@ -200,22 +210,21 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
       if (!game) ball.vy += 400 * dt;
       wall(ball, dt);
     }
-    if (puck) {
-      puck.angle -= dt * .2; wall(puck, dt, true);
-      const dx = puck.x - ball.x, dy = puck.y - ball.y, distance = Math.hypot(dx, dy) || 1;
-      const separation = extent(ball) + extent(puck);
-      if (distance < separation) {
-        const nx = dx / distance, ny = dy / distance;
-        puck.x += nx * (separation - distance); puck.y += ny * (separation - distance);
-        const speed = (puck.vx - ball.vx) * nx + (puck.vy - ball.vy) * ny;
-        if (speed < 0) {
-          puck.vx = clamp(puck.vx - 1.8 * speed * nx, -2000, 2000);
-          puck.vy = clamp(puck.vy - 1.8 * speed * ny, -2000, 2000);
-          if (!drag) { ball.vx += speed * nx * .25; ball.vy += speed * ny * .25; }
-          tone(Math.abs(speed), 220);
-        }
-      }
-    }
+    if (puck) { puck.angle -= dt * .2; wall(puck, dt, true); strike(); }
+  }
+  function strike() {
+    if (!puck) return;
+    const dx = puck.x - ball.x, dy = puck.y - ball.y, distance = Math.hypot(dx, dy) || 1;
+    const separation = extent(ball) + extent(puck);
+    if (distance >= separation) return;
+    const nx = dx / distance, ny = dy / distance;
+    puck.x += nx * (separation - distance); puck.y += ny * (separation - distance);
+    const speed = (puck.vx - ball.vx) * nx + (puck.vy - ball.vy) * ny;
+    if (speed >= 0) return;
+    puck.vx = clamp(puck.vx - 1.8 * speed * nx, -2000, 2000);
+    puck.vy = clamp(puck.vy - 1.8 * speed * ny, -2000, 2000);
+    if (!drag) { ball.vx += speed * nx * .25; ball.vy += speed * ny * .25; }
+    tone(Math.abs(speed), 220);
   }
   function draw() {
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.clearRect(0, 0, width, height);
@@ -271,8 +280,15 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     const now = performance.now(), dt = Math.max(.008, (now - drag.time) / 1000);
     ball.vx = clamp((event.clientX - drag.lastX) / dt, -2200, 2200);
     ball.vy = clamp((event.clientY - drag.lastY) / dt, -2200, 2200);
-    ball.x = event.clientX - drag.dx; ball.y = event.clientY - drag.dy;
-    const rawX = ball.x, rawY = ball.y; contain(ball);
+    const rawX = event.clientX - drag.dx, rawY = event.clientY - drag.dy;
+    // One pointer event can carry the paddle clean past the puck, so walk it there in hops too
+    // short to skip the puck and strike at each one.
+    const fromX = ball.x, fromY = ball.y, live = !!puck && !paused;
+    const hops = live ? Math.max(1, Math.ceil(Math.hypot(rawX - fromX, rawY - fromY) / (ball.r / 2))) : 1;
+    for (let hop = 1; hop <= hops; hop++) {
+      ball.x = fromX + (rawX - fromX) * hop / hops; ball.y = fromY + (rawY - fromY) * hop / hops;
+      contain(ball); if (live) strike();
+    }
     const px = Math.abs(rawX - ball.x), py = Math.abs(rawY - ball.y);
     drag.pressure = Math.max(px, py);
     ball.sx = 1 - Math.min(.45, px / ball.r * .6) + Math.min(.2, py / ball.r * .2);
@@ -313,7 +329,12 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     if (key === "p" || key === " ") setPaused(!paused);
     const dx = key === "arrowleft" ? -1 : key === "arrowright" ? 1 : 0;
     const dy = key === "arrowup" ? -1 : key === "arrowdown" ? 1 : 0;
-    if (dx || dy) { ball.vx += dx * 300; ball.vy += dy * 300; if (paused) { ball.x += dx * 18; ball.y += dy * 18; contain(ball); } }
+    if (dx || dy) {
+      // A held key repeats about 30 times a second. Outside the game each repeat would be another
+      // wall bump and strobe the page color, so there only the press itself kicks.
+      if (game || !event.repeat) { ball.vx += dx * 300; ball.vy += dy * 300; }
+      if (paused) { ball.x += dx * 18; ball.y += dy * 18; contain(ball); }
+    }
   }, options);
   window.addEventListener("resize", resize, options);
   window.addEventListener("blur", () => { drag = null; pinch = null; pointers.clear(); ball.vx = ball.vy = 0; }, options);
