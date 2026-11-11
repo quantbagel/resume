@@ -52,7 +52,7 @@ export default function Home() {
       <h1 className="sr-only">Lucas Miranda — quantbagel</h1>
       <p className="sr-only">Building Abstract — compute and physical AI.</p>
       <p id="instructions" className="sr-only">Drag and throw the ring. Arrow keys move it. C changes colors, P pauses, R resets, and Enter starts air hockey. Double tap to play. Push and hold against an edge to scatter the letters. In the ring, the words Abstract and X are links.</p>
-      <canvas ref={canvas} className="ring-canvas" tabIndex={0} aria-label="Interactive ring: Lucas Miranda is building Abstract — compute and physical AI" aria-describedby="instructions" />
+      <canvas ref={canvas} className="ring-canvas" tabIndex={0} aria-label="Interactive ring: I&apos;m building Abstract — compute and physical AI" aria-describedby="instructions" />
       <p className="gesture-hint" aria-hidden="true">drag, throw, double tap</p>
       {game && <div className="game-hud" aria-label="Air hockey score">
         <span aria-label={`${game.seconds} seconds remaining`}>:{String(game.seconds).padStart(2, "0")}</span>

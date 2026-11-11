@@ -181,14 +181,14 @@ test("a swipe that carries the paddle past the puck in one move still strikes it
   assert.ok(env.games.at(-1)!.score >= 1);
 });
 
-const COPY = "lucas miranda is building abstract — compute and physical ai. on the internet as quantbagel. say hello on x.";
+const COPY = "i'm building abstract — compute and physical ai. on the internet as quantbagel. say hello on x.";
 
 test("tapping abstract or x in the ring opens its link, and other letters do not", () => {
   const env = setup(true);
   env.tap(COPY.indexOf("abstract") + 3);
   env.tap(COPY.length - 2);
   assert.deepEqual(env.opened, ["https://abstract.inc/inference", "https://x.com/quantbagel"]);
-  env.tap(COPY.indexOf("miranda"));
+  env.tap(COPY.indexOf("building"));
   env.tap(COPY.indexOf("quantbagel") + 4);
   assert.equal(env.opened.length, 2);
   assert.equal(env.games.length, 0);
