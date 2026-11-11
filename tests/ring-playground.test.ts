@@ -13,11 +13,16 @@ function setup(reducedMotion = false) {
     Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
   };
   let now = 1000, nextFrame: FrameRequestCallback | undefined;
-  let frames = 0, invalidDraws = 0;
+  let frames = 0, invalidDraws = 0, colorChanges = 0;
+  let glyphs: number[][] = [];
   const colors = new Map();
   const media = Object.assign(new EventTarget(), { matches: reducedMotion });
   const win = new EventTarget();
-  const context = new Proxy({}, { get: (_target, key) => key === "measureText" ? () => ({ width: 12 }) : (...args: unknown[]) => { if (args.some(value => typeof value === "number" && !Number.isFinite(value))) invalidDraws++; } });
+  const context = new Proxy({}, { get: (_target, key) => key === "measureText" ? () => ({ width: 12 }) : (...args: unknown[]) => {
+    if (args.some(value => typeof value === "number" && !Number.isFinite(value))) invalidDraws++;
+    if (key === "clearRect") glyphs = [];
+    if (key === "translate") glyphs.push(args as number[]);
+  } });
   const canvas = Object.assign(new EventTarget(), {
     clientWidth: 1280, clientHeight: 800, width: 0, height: 0, style: { cursor: "default" },
     getContext: () => context, focus: () => {}, setPointerCapture: () => {},
@@ -25,7 +30,7 @@ function setup(reducedMotion = false) {
   });
   globals("window", win);
   globals("document", { hidden: false, documentElement: { style: {
-    setProperty: (key: string, value: string) => colors.set(key, value), removeProperty: (key: string) => colors.delete(key),
+    setProperty: (key: string, value: string) => { colors.set(key, value); if (key === "--page-bg") colorChanges++; }, removeProperty: (key: string) => colors.delete(key),
   } }, querySelector: () => null });
   globals("matchMedia", () => media);
   globals("devicePixelRatio", 2);
@@ -44,8 +49,28 @@ function setup(reducedMotion = false) {
   };
   const send = (type: string, properties: Record<string, unknown>) => canvas.dispatchEvent(Object.assign(new Event(type, { cancelable: true }), properties));
   const pointer = (type: string, x: number, y: number) => send(type, { clientX: x, clientY: y, button: 0, pointerId: 1 });
-  const key = (key: string) => send("keydown", { key });
-  return { canvas, win, games, rounds, pauses, colors, advance, pointer, key, get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
+  const key = (key: string, repeat = false) => send("keydown", { key, repeat });
+  // Watches the ring as a visitor would. Its centre is read back from the drawn glyphs, and a bounce
+  // is an axis reversing within two frames: a wall does that, the top of an arc takes about ten.
+  const watch = (seconds: number) => {
+    const centre = () => [0, 1].map(axis => (Math.min(...glyphs.map(g => g[axis])) + Math.max(...glyphs.map(g => g[axis]))) / 2);
+    const heading = [{ sign: 0, age: 9 }, { sign: 0, age: 9 }], before = colorChanges;
+    let last = centre(), bounces = 0;
+    for (let i = 0; i < seconds * 120; i++) {
+      advance(1 / 120);
+      const next = centre();
+      heading.forEach((axis, index) => {
+        const moved = next[index] - last[index];
+        axis.age++;
+        if (Math.abs(moved) <= .15) return;
+        if (axis.sign && Math.sign(moved) !== axis.sign && axis.age <= 2) bounces++;
+        axis.sign = Math.sign(moved); axis.age = 0;
+      });
+      last = next;
+    }
+    return { bounces, colorChanges: colorChanges - before };
+  };
+  return { canvas, win, games, rounds, pauses, colors, advance, pointer, key, watch, get invalidDraws() { return invalidDraws; }, get framePending() { return !!nextFrame; } };
 }
 
 test("a double tap starts a 15-second round, produces one result, and resets", () => {
@@ -109,13 +134,47 @@ test("mobile resize and long simulation keep drawing finite coordinates", () => 
   assert.equal(env.invalidDraws, 0);
 });
 
- test("a hit through the goal increments the score", () => {
+test("a hit through the goal increments the score", () => {
   const env = setup();
   instance!.startGame();
   env.pointer("pointerdown", 640, 608);
   env.pointer("pointermove", 640, 400);
   env.advance(.05);
   env.pointer("pointerup", 640, 400);
+  env.advance(1);
+  assert.ok(env.games.at(-1)!.score >= 1);
+});
+
+test("every bounce off the floor changes the color until the ring settles", () => {
+  const env = setup();
+  const seen = env.watch(16);
+  assert.ok(seen.bounces >= 10);
+  assert.equal(seen.colorChanges, seen.bounces);
+  assert.deepEqual(env.watch(2), { bounces: 0, colorChanges: 0 });
+});
+
+test("side walls and the ceiling change the color on every bump too", () => {
+  const env = setup();
+  for (const key of ["ArrowLeft", "ArrowLeft", "ArrowUp", "ArrowUp", "ArrowUp"]) env.key(key);
+  const seen = env.watch(5);
+  assert.ok(seen.bounces >= 5);
+  assert.equal(seen.colorChanges, seen.bounces);
+});
+
+test("a held arrow key kicks the ring once instead of bumping on every key repeat", () => {
+  const env = setup();
+  env.key("ArrowDown");
+  let colorChanges = 0;
+  for (let i = 0; i < 60; i++) { env.key("ArrowDown", true); colorChanges += env.watch(1 / 30).colorChanges; }
+  assert.ok(colorChanges >= 1 && colorChanges <= 4);
+});
+
+test("a swipe that carries the paddle past the puck in one move still strikes it", () => {
+  const env = setup();
+  instance!.startGame();
+  env.pointer("pointerdown", 640, 608);
+  env.pointer("pointermove", 640, 120);
+  env.pointer("pointerup", 640, 120);
   env.advance(1);
   assert.ok(env.games.at(-1)!.score >= 1);
 });
