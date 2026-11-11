@@ -250,7 +250,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
     canvas.focus({ preventScroll: true }); canvas.setPointerCapture(event.pointerId);
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointers.size === 2 && !game) {
-      const [a, b] = [...pointers.values()]; pinch = { distance: Math.hypot(a.x - b.x, a.y - b.y), radius: ball.r };
+      const [a, b] = Array.from(pointers.values()); pinch = { distance: Math.hypot(a.x - b.x, a.y - b.y), radius: ball.r };
       lastTap.time = 0; return;
     }
     drag = { id: event.pointerId, dx: event.clientX - ball.x, dy: event.clientY - ball.y,
@@ -261,7 +261,7 @@ export function createPlayground(canvas: HTMLCanvasElement, callbacks: Callbacks
   function move(event: PointerEvent) {
     if (pointers.has(event.pointerId)) pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pinch && pointers.size === 2) {
-      const [a, b] = [...pointers.values()];
+      const [a, b] = Array.from(pointers.values());
       ball.r = clamp(pinch.radius * Math.hypot(a.x - b.x, a.y - b.y) / Math.max(pinch.distance, 1), baseRadius * .45, Math.min(width, height) * .43);
       contain(ball); if (drag) drag.moved = true; return;
     }

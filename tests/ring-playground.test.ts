@@ -36,7 +36,7 @@ function setup(reducedMotion = false) {
   instance = createPlayground(canvas as unknown as HTMLCanvasElement, {
     onGameChange: value => games.push(value), onRoundEnd: value => rounds.push(value), onPauseChange: value => pauses.push(value),
   });
-  cleanup = () => { for (const [key, descriptor] of saved) {
+  cleanup = () => { for (const [key, descriptor] of Array.from(saved)) {
     if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
   } };
   const advance = (seconds: number) => {
