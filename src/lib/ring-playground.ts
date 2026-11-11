@@ -14,8 +14,12 @@ const linkOf = (index: number) => LINKS.find(link => index >= link.from && index
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 // The slowest wall impact, in px/s, that counts as a bump. Anything slower is the ring settling.
 const BUMP = 40;
+const FONT = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+// Glyph sprites are drawn at this multiple of the screen's resolution, so a sprite turned to any
+// angle is scaled down, which keeps its edges as clean as freshly drawn text.
+const SUPERSAMPLE = 2;
 type Ball = { x: number; y: number; vx: number; vy: number; r: number; angle: number; sx: number; sy: number };
-type Particle = { char: string; x: number; y: number; vx: number; vy: number; angle: number; spin: number; targetX: number; targetY: number; targetAngle: number };
+type Particle = { index: number; x: number; y: number; vx: number; vy: number; angle: number; spin: number; targetX: number; targetY: number; targetAngle: number };
 export type Playground = { destroy: () => void };
 
 export function createPlayground(canvas: HTMLCanvasElement): Playground {
@@ -27,7 +31,7 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let paused = reduceMotion.matches, destroyed = false;
   let width = 0, height = 0, ratio = 1, baseRadius = 180;
-  let theme = 0, audio: AudioContext | undefined;
+  let theme = 0;
   let lastSound = 0, lastTime = 0, frameId = 0;
   let ball: Ball = { x: 0, y: 0, vx: 0, vy: 0, r: 180, angle: Math.PI, sx: 1, sy: 1 };
   let drag: { id: number; dx: number; dy: number; startX: number; startY: number; lastX: number; lastY: number; time: number; started: number; moved: boolean; pressure: number } | null = null;
@@ -36,40 +40,87 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
   const pointers = new Map<number, { x: number; y: number }>();
   let particles: Particle[] = [], burstTime = 0, returning = false;
   // The glyph advances are measured once, not on every animation frame.
-  ctx.font = '400 26px "Helvetica Neue", Helvetica, Arial, sans-serif';
-  const glyphs = Array.from(COPY).map(char => ({ char, width: ctx.measureText(char).width }));
+  ctx.font = `400 26px ${FONT}`;
+  const glyphs = Array.from(COPY).map((char, index) => ({ char, width: ctx.measureText(char).width, linked: !!linkOf(index), sprite: 0, plain: 0 }));
   const textWidth = glyphs.reduce((sum, glyph) => sum + glyph.width, 0);
 
+  // Turned text is the one costly thing on this page. The browser rasterises a glyph afresh for
+  // every new angle, and on a turning ring that is every glyph on every frame. So each distinct
+  // glyph is drawn once, upright, into this atlas, and a frame only copies sprites out of it.
+  const atlas = document.createElement("canvas"), atlasContext = atlas.getContext("2d");
+  if (!atlasContext) throw new Error("Canvas is unavailable");
+  const atlasCtx = atlasContext;
+  const sprites: { char: string; width: number; linked: boolean; x: number; y: number; w: number }[] = [];
+  const spriteFor = (glyph: { char: string; width: number }, linked: boolean) => {
+    const found = sprites.findIndex(other => other.char === glyph.char && other.linked === linked);
+    return found < 0 ? sprites.push({ char: glyph.char, width: glyph.width, linked, x: 0, y: 0, w: 0 }) - 1 : found;
+  };
+  // A linked glyph carries its underline in the ring and loses it when the letters scatter.
+  for (const glyph of glyphs) { glyph.plain = spriteFor(glyph, false); glyph.sprite = spriteFor(glyph, glyph.linked); }
+  // What the atlas was last drawn for. Sizes are in CSS pixels; `scale` converts them to atlas pixels.
+  let drawn = { px: 0, stretch: 0, scale: 0, color: "", ascent: 0, height: 0 };
+  function prepareSprites() {
+    const px = fontSize(ball), fontScale = px / 26, color = COLORS[theme][1], scale = ratio * SUPERSAMPLE;
+    const stretch = (TAU * ball.r - 19.5 * fontScale) / textWidth / fontScale;
+    if (px === drawn.px && stretch === drawn.stretch && scale === drawn.scale && color === drawn.color) return;
+    // Each sprite gets a margin so overhanging strokes and soft edges are never clipped.
+    const margin = Math.ceil(px * .3) + 2, ascent = Math.ceil(px) + 1, height = ascent + Math.ceil(px * .32) + 2;
+    let x = 0, y = 0, widest = 0;
+    for (const sprite of sprites) {
+      sprite.w = Math.ceil(sprite.width * fontScale * stretch) + margin * 2;
+      if (x && (x + sprite.w) * scale > 2048) { x = 0; y += height; }
+      sprite.x = x; sprite.y = y; x += sprite.w; widest = Math.max(widest, x);
+    }
+    atlas.width = Math.ceil(widest * scale); atlas.height = Math.ceil((y + height) * scale);
+    atlasCtx.font = `400 ${px}px ${FONT}`; atlasCtx.textAlign = "center"; atlasCtx.textBaseline = "alphabetic";
+    atlasCtx.fillStyle = color;
+    for (const sprite of sprites) {
+      atlasCtx.setTransform(scale * stretch, 0, 0, scale, (sprite.x + sprite.w / 2) * scale, (sprite.y + ascent) * scale);
+      atlasCtx.fillText(sprite.char, 0, 0);
+      if (sprite.linked) {
+        const span = sprite.width * fontScale + 1;
+        atlasCtx.fillRect(-span / 2, 4 * fontScale, span, Math.max(1, 1.5 * fontScale));
+      }
+    }
+    drawn = { px, stretch, scale, color, ascent, height };
+  }
+  function drawSprite(sprite: (typeof sprites)[number], x: number, y: number, angle: number) {
+    const scale = drawn.scale;
+    const cos = Math.cos(angle) * ratio, sin = Math.sin(angle) * ratio;
+    ctx.setTransform(cos, sin, -sin, cos, x * ratio, y * ratio);
+    ctx.drawImage(atlas, sprite.x * scale, sprite.y * scale, sprite.w * scale, drawn.height * scale,
+      -sprite.w / 2, -drawn.ascent, sprite.w, drawn.height);
+  }
+
+  const themeColor = document.querySelector('meta[name="theme-color"]');
   function setTheme(index: number) {
     theme = index % COLORS.length;
     document.documentElement.style.setProperty("--page-bg", COLORS[theme][0]);
     document.documentElement.style.setProperty("--page-fg", COLORS[theme][1]);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", COLORS[theme][0]);
+    themeColor?.setAttribute("content", COLORS[theme][0]);
   }
-  // Browsers keep audio suspended until the visitor's first gesture. Until then there is no
-  // speaker: notes scheduled on a suspended context would all sound at once when it resumes.
-  function speaker() {
-    audio ??= new AudioContext();
-    if (audio.state === "running") return audio;
-    void audio.resume().catch(() => {});
-    return null;
+  // The audio context is built now, before the first frame. Building one takes a few
+  // milliseconds, and up to a tenth of a second when the browser has to start its audio service,
+  // and built on demand that pause landed on the ring's first bounce. Browsers keep the context
+  // suspended until a gesture. Until then nothing is played: notes scheduled on a suspended
+  // context would all sound at once when it starts.
+  const audio = typeof AudioContext === "function" ? new AudioContext() : null;
+  function wakeAudio() {
+    // A browser may decline to start audio for a gesture it does not count. The next gesture asks again.
+    if (audio && audio.state !== "running") void audio.resume().catch(() => {});
   }
   function tone(force: number, frequency = 160) {
-    if (performance.now() - lastSound < 35) return;
-    try {
-      const audio = speaker();
-      if (!audio) return;
-      lastSound = performance.now();
-      const oscillator = audio.createOscillator(), gain = audio.createGain();
-      oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(frequency, audio.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(45, audio.currentTime + .12);
-      gain.gain.setValueAtTime(Math.min(.16, .04 + force / 8000), audio.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .14);
-      oscillator.connect(gain); gain.connect(audio.destination);
-      oscillator.start(); oscillator.stop(audio.currentTime + .15);
-      oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
-    } catch { /* Audio must never interrupt the interaction. */ }
+    if (!audio || audio.state !== "running" || performance.now() - lastSound < 35) return;
+    lastSound = performance.now();
+    const oscillator = audio.createOscillator(), gain = audio.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, audio.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(45, audio.currentTime + .12);
+    gain.gain.setValueAtTime(Math.min(.16, .04 + force / 8000), audio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .14);
+    oscillator.connect(gain); gain.connect(audio.destination);
+    oscillator.start(); oscillator.stop(audio.currentTime + .15);
+    oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
   }
   function resize() {
     const oldWidth = width, oldHeight = height;
@@ -97,37 +148,23 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
     setTheme(0); paused = reduceMotion.matches;
     canvas.style.cursor = "default";
   }
-  function forGlyphs(body: Ball, visit: (char: string, x: number, y: number, angle: number, scale: number, index: number) => void) {
+  function forGlyphs(body: Ball, visit: (index: number, x: number, y: number, angle: number) => void) {
     const fontScale = fontSize(body) / 26;
     const gap = 19.5 * fontScale;
     const scale = (TAU * body.r - gap) / textWidth;
     let angle = body.angle + gap / body.r / 2;
-    glyphs.forEach((glyph, index) => {
-      const arc = glyph.width * scale / body.r;
+    for (let index = 0; index < glyphs.length; index++) {
+      const arc = glyphs[index].width * scale / body.r;
       const mid = angle + arc / 2;
-      visit(glyph.char, body.x + Math.cos(mid) * body.r * body.sx, body.y + Math.sin(mid) * body.r * body.sy,
-        Math.atan2(Math.cos(mid) * body.sy, -Math.sin(mid) * body.sx), scale / fontScale, index);
+      visit(index, body.x + Math.cos(mid) * body.r * body.sx, body.y + Math.sin(mid) * body.r * body.sy,
+        Math.atan2(Math.cos(mid) * body.sy, -Math.sin(mid) * body.sx));
       angle += arc;
-    });
-  }
-  function drawRing(body: Ball) {
-    ctx.font = `400 ${fontSize(body)}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
-    ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-    const fontScale = fontSize(body) / 26;
-    forGlyphs(body, (char, x, y, angle, scale, index) => {
-      ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, 1);
-      ctx.fillText(char, 0, 0);
-      if (linkOf(index)) {
-        const span = glyphs[index].width * fontScale + 1;
-        ctx.fillRect(-span / 2, 4 * fontScale, span, Math.max(1, 1.5 * fontScale));
-      }
-      ctx.restore();
-    });
+    }
   }
   function linkAt(x: number, y: number) {
     if (particles.length) return null;
     let nearest = Math.max(22, fontSize(ball)), found: string | null = null;
-    forGlyphs(ball, (_char, glyphX, glyphY, _angle, _scale, index) => {
+    forGlyphs(ball, (index, glyphX, glyphY) => {
       const link = linkOf(index), distance = Math.hypot(glyphX - x, glyphY - y);
       if (link && distance < nearest) { nearest = distance; found = link.href; }
     });
@@ -136,8 +173,8 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
   function burst() {
     if (particles.length) return;
     ball.sx = ball.sy = 1;
-    forGlyphs(ball, (char, x, y, angle) => {
-      particles.push({ char, x, y, vx: (x - ball.x) * (1.6 + Math.random()) + ball.vx * .2,
+    forGlyphs(ball, (index, x, y, angle) => {
+      particles.push({ index, x, y, vx: (x - ball.x) * (1.6 + Math.random()) + ball.vx * .2,
         vy: (y - ball.y) * (1.6 + Math.random()) - 190, angle, spin: (Math.random() - .5) * 5,
         targetX: 0, targetY: 0, targetAngle: 0 });
     });
@@ -147,7 +184,7 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
     if (!particles.length || returning) return;
     returning = true; burstTime = 0; ball.x = width / 2; ball.y = height / 2; ball.vx = ball.vy = 0;
     let index = 0;
-    forGlyphs(ball, (_char, x, y, angle) => {
+    forGlyphs(ball, (_glyph, x, y, angle) => {
       Object.assign(particles[index++], { targetX: x, targetY: y, targetAngle: angle });
     });
   }
@@ -203,14 +240,10 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
     }
   }
   function draw() {
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = COLORS[theme][1];
-    if (particles.length) {
-      ctx.font = '400 26px "Helvetica Neue", Helvetica, Arial, sans-serif';
-      ctx.textAlign = "center";
-      const scale = (TAU * ball.r - 19.5) / textWidth;
-      for (const p of particles) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle); ctx.scale(scale, 1); ctx.fillText(p.char, 0, 0); ctx.restore(); }
-    } else drawRing(ball);
+    prepareSprites();
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (particles.length) for (const p of particles) drawSprite(sprites[glyphs[p.index].plain], p.x, p.y, p.angle);
+    else forGlyphs(ball, (index, x, y, angle) => drawSprite(sprites[glyphs[index].sprite], x, y, angle));
   }
   function frame(time: number) {
     if (destroyed) return;
@@ -288,7 +321,7 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
   canvas.addEventListener("dblclick", event => event.preventDefault(), options);
   // Sound is always on, so the first gesture anywhere on the page wakes the speaker.
   for (const gesture of ["pointerdown", "pointerup", "keydown", "click"])
-    window.addEventListener(gesture, () => { speaker(); }, { signal: abort.signal, capture: true });
+    window.addEventListener(gesture, wakeAudio, { signal: abort.signal, capture: true });
   canvas.addEventListener("keydown", event => {
     const key = event.key.toLowerCase();
     if (["arrowup", "arrowdown", "arrowleft", "arrowright", " ", "escape", "r", "c", "p"].includes(key)) event.preventDefault();
@@ -311,6 +344,7 @@ export function createPlayground(canvas: HTMLCanvasElement): Playground {
   return {
     destroy() {
       destroyed = true; abort.abort(); cancelAnimationFrame(frameId); void audio?.close().catch(() => {});
+      atlas.width = atlas.height = 0;
       document.documentElement.style.removeProperty("--page-bg"); document.documentElement.style.removeProperty("--page-fg");
     },
   };
