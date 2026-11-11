@@ -10,7 +10,7 @@ export default function Home() {
   const [game, setGame] = useState<{ score: number; seconds: number } | null>(null);
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
-  const [sound, setSound] = useState(false);
+  const [sound, setSound] = useState(true);
   const [paused, setPaused] = useState(false);
 
   useLayoutEffect(() => {
@@ -51,7 +51,7 @@ export default function Home() {
     <main className="playground" data-mode={game ? "game" : "ring"}>
       <h1 className="sr-only">Lucas Miranda — quantbagel</h1>
       <p className="sr-only">Building Abstract — AI and robotics.</p>
-      <p id="instructions" className="sr-only">Drag and throw the ring. Arrow keys move it. C changes colors, P pauses, R resets, and Enter starts air hockey. Double tap to play. Push and hold against an edge to scatter the letters.</p>
+      <p id="instructions" className="sr-only">Drag and throw the ring. Arrow keys move it. C changes colors, P pauses, R resets, and Enter starts air hockey. Double tap to play. Push and hold against an edge to scatter the letters. In the ring, the words Abstract and X are links.</p>
       <canvas ref={canvas} className="ring-canvas" tabIndex={0} aria-label="Interactive ring: Lucas Miranda is building Abstract — AI and robotics" aria-describedby="instructions" />
       <p className="gesture-hint" aria-hidden="true">drag, throw, double tap</p>
       {game && <div className="game-hud" aria-label="Air hockey score">
@@ -76,6 +76,7 @@ export default function Home() {
           <div className="play-instructions">
             <p>Drag it. Throw it. Squeeze it against an edge.</p>
             <p>Double tap for a little air hockey.</p>
+            <p>Tap abstract or x in the ring to visit.</p>
             <p className="keyboard-hint">Arrows to move · C for color · P to pause · R to reset</p>
           </div>
           <div className="dialog-actions">
